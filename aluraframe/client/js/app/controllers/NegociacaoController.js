@@ -11,13 +11,9 @@ class NegociacaoController {
     adiciona(event) {
         event.preventDefault();
 
-        let negociacao = new Negociacao(
-            this._inputQuantidade.value;
-            this._inputQuantidade.value;
-            this._inputValor.value;
-        );
+        let data = new Date(this._inputData.value.split('-'));
+        console.log(data);
 
-        console.log(negociacao);
 
     }
 }
