@@ -58,18 +58,14 @@ class NegociacaoController {
     }
 
     importaNegociacoes() {
+
         this._service
-            .obterNegociacoes()
-            .then(negociacoes => 
-                negociacoes.filter(negociacao =>  
-                    !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
-                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
-       )
-        .then(negociacoes => negociacoes.forEach(negociacao => {
-            this._listaNegociacoes.adiciona(negociacao);
-            this._mensagem.texto = 'Negociações do período importadas'   
-        }))
-        .catch(erro => this._mensagem.texto = erro);
+            .importa(this._listaNegociacoes.negociacoes)
+            .then(negociacoes => negociacoes.forEach(negociacao => {
+                this._listaNegociacoes.adiciona(negociacao);
+                this._mensagem.texto = 'Negociações do período importadas'
+              }))
+            .catch(erro => this._mensagem.texto = erro);
     }
 
     apaga() {
@@ -81,6 +77,20 @@ class NegociacaoController {
                 this._listaNegociacoes.esvazia();
             })
             .catch(erro => this._mensagem.texto = erro);
+    }
+
+    importa(listaAtual) {
+
+        return this.obterNegociacoes()
+            .then(negociacoes =>
+                negociacoes.filter(negociacao =>
+                    !listaAtual.some(negociacaoExistente =>
+                        JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente)))
+            )
+            .catch(erro => {
+                console.log(erro);
+                throw new Error("Não foi possível importar as negociações");
+            });
     }
 
     _criaNegociacao() {
